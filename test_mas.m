@@ -1,4 +1,4 @@
-%проверка Т1 и Т2
+%check T1 and T2
 load T.mat;
 N = 50;
 xc = 10;
@@ -6,12 +6,12 @@ h = 0.3;
 alpha2 = 0.2;
 beta1 = 0.8;
 beta2 = 0.1;
-M = 0:h:N; %сетка времени
+M = 0:h:N; %time grid
 x1 = zeros(1, length(M));
 x2 = zeros(1, length(M));
-x1(1) = 1; %начальные условия численности жертв
-x2(1) = 1; %начальные условия численности хищников
-alpha1(1) = 1; %начальные условия питания
+x1(1) = 1; %initial conditions of population preys
+x2(1) = 1; %initial conditions of population predators
+alpha1(1) = 1; %initial conditions of food
 U(1) = 0;
 for j = 1:1:size(T, 1)
     for n=1:(length(M) - 1)
@@ -32,25 +32,25 @@ for j = 1:1:size(T, 1)
     if((j >= 16) && (j <= 23))
        subplot(221);
        plot(x1, x2, 'g');
-       xlabel('Жертвы');
-       ylabel('Хищники');
+       xlabel('Preys');
+       ylabel('Predators');
        hold on;
        subplot(222);
        plot(x1, alpha1,'g');
-       xlabel('Жертвы');
-       ylabel('Питание');
+       xlabel('Preys');
+       ylabel('Food');
        hold on;
        subplot(223);
        plot(x2, alpha1, 'r');
-       xlabel('Хищники');
-       ylabel('Питание');
+       xlabel('Predators');
+       ylabel('Food');
        hold on;
        subplot(224);
        plot3(x1, x2, alpha1);
-       xlabel('Жертвы');
-       ylabel('Хищники');
-       zlabel('Питание');
-       legend('Жертвы', 'Хищники', 'Питание');
+       xlabel('Preys');
+       ylabel('Predators');
+       zlabel('Food');
+       legend('Preys', 'Predators', 'Food');
        hold on;
     end
 %     if((j >= 24) && (j <= 26))
