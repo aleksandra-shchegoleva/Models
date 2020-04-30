@@ -1,25 +1,25 @@
-e1 = 25; %критерий для устройчивости системы
+e1 = 25; %criterion for system stability
 xc = 10;
-e2 = .2*xc; %критерий для достижения цели
+e2 = .2*xc; %criteria for a goal
 flag = 0;
 
-N = 50; %время
+N = 50; %time
 
 U(1) = 0;
 h = 0.3;
 alpha2 = 0.2;
 beta1 = 0.8;
 beta2 = 0.1;
-M = 0:h:N; %сетка времени
-T = zeros(1, 2); %таблица с коеффициентами T
+M = 0:h:N; %time grid
+T = zeros(1, 2); %table with coefficients T
 
 x1 = zeros(1, length(M));
 x2 = zeros(1, length(M));
-x1(1) = 1; %начальные условия численности жертв
-x2(1) = 1; %начальные условия численности хищников
-alpha1(1) = 1; %начальные условия питания
+x1(1) = 1; %initial conditions of population preys
+x2(1) = 1; %initial conditions of population predators
+alpha1(1) = 1; %initial conditions of food
 
-fid = fopen('stability.txt', 'w'); %открытие файла для записи данных
+fid = fopen('stability.txt', 'w'); %open file for data recording
 fid1 = fopen('target.txt', 'w');
 
 % for alpha2 = 0.1:0.001:0.3
