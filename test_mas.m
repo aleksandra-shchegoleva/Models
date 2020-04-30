@@ -1,5 +1,7 @@
 %проверка Т1 и Т2
 load T.mat;
+N = 50;
+xc = 10;
 h = 0.3;
 alpha2 = 0.2;
 beta1 = 0.8;
@@ -27,24 +29,41 @@ for j = 1:1:size(T, 1)
        x2(n + 1) = x2(n) + h*f2;
        alpha1(n + 1) = alpha1(n) + h*f3;
     end
-    if((j > 0) && (j <= 15))
-       subplot(321);
-    end
-    if((j > 15) && (j <= 30))
-       subplot(322);
-    end
-    if((j > 30) && (j <= 45))
-       subplot(323);
-    end
-    if((j > 45) && (j <= 60))
-       subplot(324);
-    end
-    if((j > 60) && (j <= 71))
-       subplot(325);
-    end
-    plot(M, x1, 'g', M, x2, 'r', M, alpha1, 'b');
-       xlabel('Время');
-       ylabel('Популяция');
+    if((j >= 16) && (j <= 23))
+       subplot(221);
+       plot(x1, x2, 'g');
+       xlabel('Жертвы');
+       ylabel('Хищники');
+       hold on;
+       subplot(222);
+       plot(x1, alpha1,'g');
+       xlabel('Жертвы');
+       ylabel('Питание');
+       hold on;
+       subplot(223);
+       plot(x2, alpha1, 'r');
+       xlabel('Хищники');
+       ylabel('Питание');
+       hold on;
+       subplot(224);
+       plot3(x1, x2, alpha1);
+       xlabel('Жертвы');
+       ylabel('Хищники');
+       zlabel('Питание');
        legend('Жертвы', 'Хищники', 'Питание');
        hold on;
+    end
+%     if((j >= 24) && (j <= 26))
+%        subplot(132);
+%     end
+%     if((j >= 27) && (j <= 30))
+%        subplot(133);
+%      end
+%     if((j > 45) && (j <= 60))
+%        subplot(324);
+%     end
+%     if((j > 60) && (j <= 71))
+%        subplot(325);
+%     end
+    
 end
