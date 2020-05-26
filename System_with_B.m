@@ -1,21 +1,21 @@
-N = 10; %максимум сетки
+N = 10; %time
 h = 0.1;
-M = 0:h:N; %сетка времени
+M = 0:h:N; %time grid
 
 x1 = zeros(1, length(M));
 x2 = zeros(1, length(M));
 alpha1 = zeros(1, length(M));
 
-alpha2 = 0.9; %коэффициент убыли хищников
-beta1 = 0.1; %коэффициент убыли жертв
-beta2 = 0.1; %коэффициент рождаемости хищников
+alpha2 = 0.9; %predator attrition rate
+beta1 = 0.1; %prey attrition rate
+beta2 = 0.1; %predator fertility rate
 
-x1(1) = 5; %начальные условия численности жертв
-x2(1) = 2; %начальные условия численности хищников
-alpha1(1) = 2; %начальные условия питания
+x1(1) = 5; %initial conditions of population preys
+x2(1) = 2; %initial conditions of population predators
+alpha1(1) = 2; %initial conditions of food
 U(1) = 0;
 xc = 10.0;
-B = 10; %популяция хищников
+B = 10; %population of predators
 
 T1 = 10.0;
 T2 = 0.01;
@@ -42,6 +42,6 @@ for n=1:(length(M) - 1)
 end
 
  plot(M, x1, 'g', M, x2, 'r', M, alpha1, 'b');
- xlabel('Время');
- ylabel('Популяция');
- legend('Жертвы', 'Хищники', 'Питание');
+ xlabel('Time');
+ ylabel('Population');
+ legend('Preys', 'Predators', 'Food');
