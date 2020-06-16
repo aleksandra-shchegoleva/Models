@@ -6,11 +6,6 @@ x1 = zeros(1, length(M));
 x2 = zeros(1, length(M));
 alpha1 = zeros(1, length(M));
 U = zeros(1, length(M));
-
-x1 = zeros(1, length(M));
-x2 = zeros(1, length(M));
-alpha1 = zeros(1, length(M));
-U = zeros(1, length(M));
  
 alpha2 = 0.06; %predator attrition rate
 beta1 = 0.005; %prey attrition rate
