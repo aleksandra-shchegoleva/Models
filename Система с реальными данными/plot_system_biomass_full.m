@@ -15,7 +15,7 @@ real_data(:,2) = xlsread("data.xlsx", 'K3:K5');
 real_data(:,1) = real_data(:,1).*1000;
 real_data(:,2) = real_data(:,2);
 
-k = input("Увеличение жертв ");
+k = input("Increase of preys ");
 
 x1(1) = real_data(1, 1); %initial conditions of phytoplankton
 x2(1) = real_data(1, 2); %initial conditions of zooplankton
@@ -69,9 +69,9 @@ end
 alpha1 = zeros(1, length(M));
 U(1) = 0;
 
-xc = x1(1) * k; %целевое значение
+xc = x1(1) * k; %goal value
 e2 = 0.05 * xc;
-alpha1(1) = mas(1); %начальные условия питания
+alpha1(1) = mas(1); %initial conditions of food
 alpha2 = mas(2);
 beta1 = mas(3);
 beta2 = mas(4);
@@ -111,7 +111,7 @@ for n=1:(length(M) - 1)
            break
         end
 end
-%   период цветения воды с 1 июня (10 отчет) по 31 августа (100 отчет)
+
     if flag == 0 && T1 ~= 0 && T2 ~= 0
     for i=1:100
        if abs(x1(i) - xc) <= e2 && abs(x1(i + 1) - xc) <= e2 && abs(x1(100) - xc) <= e2&& i < MIN
@@ -158,8 +158,8 @@ hold on;
 plot(M, alpha1, 'b', 'Linewidth', 3);
 hold on;
 plot(M, ones(length(M)).*xc, '--k','Linewidth',2);
-text = strcat('Увеличение биомассы жертв в',num2str(k), ' раз');
+text = strcat('Increase of preys by',num2str(k), ' times');
 title(text);
-xlabel('Время, дни');
-ylabel('Биомасса, мг/л');
-legend('Фитопланктон (жертва)', 'Зоопланктон (хищник)', 'Питание', 'Цель');
+xlabel('Time, days');
+ylabel('Biomassa, mg/l');
+legend('Phytoplankton (prey)', 'Zooplankton (predator)', 'Food', 'Goal');
