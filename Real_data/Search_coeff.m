@@ -23,7 +23,7 @@ time = [0; 85; N];
 
 x1(1) = real_data(1, 1); %initial conditions of phytoplankton
 x2(1) = real_data(1, 2); %initial conditions of zooplankton
-xc = real_data(3, 1); %goal value
+xc = real_data(3, 1); %целевое значение
 
 M1 = zeros(1, 3);
 M2 = zeros(1, 3);
