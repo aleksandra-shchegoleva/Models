@@ -1,25 +1,33 @@
-N = 154; %period of the time
-h = 1; %step
+N = 154; %время
+h = 1; %шаг
 
-M = 0:h:N; %time grid
+M = 0:h:N; %сетка времени
 
 x1 = zeros(1, length(M));
 x2 = zeros(1, length(M));
 
-e1 = 10^6; %stability criterion
+e1 = 10^6; %критерий стабильности
 flag = 0;
 time = [0; 85; 154];
 
-real_data(:,1) = xlsread("data.xlsx", 'I3:I5');
-real_data(:,2) = xlsread("data.xlsx", 'K3:K5');
-real_data(:,1) = real_data(:,1).*1000;
-real_data(:,2) = real_data(:,2);
+choose = input("Выбери формат исходных данных: биомасса (1), популяция (2)\n");
+if choose == 1
+    real_data(:,1) = xlsread("data.xlsx", 'I3:I5');
+    real_data(:,2) = xlsread("data.xlsx", 'K3:K5');
+    real_data(:,1) = real_data(:,1).*1000;
+    real_data(:,2) = real_data(:,2);
+    labely = "Биомасса, мг/л";
+else
+    real_data(:,1) = xlsread("data.xlsx", 'H3:H5');
+    real_data(:,2) = xlsread("data.xlsx", 'J3:J5');
+    real_data(:,1) = real_data(:,1)./100000;
+    real_data(:,2) = real_data(:,2)./1000;
+    labely = "Популяция, экз/м3";
+end
+k = input("УВеличение жертв ");
 
-k = input("Increase of preys ");
-
-x1(1) = real_data(1, 1); %initial conditions of phytoplankton
-x2(1) = real_data(1, 2); %initial conditions of zooplankton
-xc = real_data(3, 1); %goal value
+x1(1) = real_data(1, 1); %начальное значение фитопланктона
+x2(1) = real_data(1, 2); %начальное значение зоопланктона
 
 mas = [];
 
@@ -69,9 +77,10 @@ end
 alpha1 = zeros(1, length(M));
 U(1) = 0;
 
-xc = x1(1) * k; %goal value
+xc = x1(1) * k; %целевое значение
 e2 = 0.05 * xc;
-alpha1(1) = mas(1); %initial conditions of food
+alpha1(1) = mas(1); %начальное значение питания
+%массив mas хранит полученные коэффициенты
 alpha2 = mas(2);
 beta1 = mas(3);
 beta2 = mas(4);
@@ -158,8 +167,8 @@ hold on;
 plot(M, alpha1, 'b', 'Linewidth', 3);
 hold on;
 plot(M, ones(length(M)).*xc, '--k','Linewidth',2);
-text = strcat('Increase of preys by',num2str(k), ' times');
+text = strcat('Увеличение by',num2str(k), ' times');
 title(text);
 xlabel('Time, days');
-ylabel('Biomassa, mg/l');
+ylabel(labely);
 legend('Phytoplankton (prey)', 'Zooplankton (predator)', 'Food', 'Goal');

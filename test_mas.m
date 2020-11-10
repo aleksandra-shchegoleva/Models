@@ -1,9 +1,9 @@
 %check T1 and T2
 load T.mat;
-N = 50;
+N = 100;
 xc = 10;
 h = 0.3;
-alpha2 = 0.2;
+alpha2 = 0.3;
 beta1 = 0.8;
 beta2 = 0.1;
 M = 0:h:N; %time grid
@@ -29,29 +29,33 @@ for j = 1:1:size(T, 1)
        x2(n + 1) = x2(n) + h*f2;
        alpha1(n + 1) = alpha1(n) + h*f3;
     end
-    if((j >= 16) && (j <= 23))
-       subplot(221);
-       plot(x1, x2, 'g');
-       xlabel('Preys');
-       ylabel('Predators');
-       hold on;
-       subplot(222);
-       plot(x1, alpha1,'g');
-       xlabel('Preys');
-       ylabel('Food');
-       hold on;
-       subplot(223);
-       plot(x2, alpha1, 'r');
-       xlabel('Predators');
-       ylabel('Food');
-       hold on;
-       subplot(224);
-       plot3(x1, x2, alpha1);
-       xlabel('Preys');
-       ylabel('Predators');
-       zlabel('Food');
-       legend('Preys', 'Predators', 'Food');
-       hold on;
+     if((j >= 2) && (j <= 7))
+        subplot(121);
+     end
+     if((j >= 8) && (j <= 12))
+        subplot(122);
+     end
+       plot(M, x1, 'g', M, x2, 'r', M, alpha1, 'b');
+         xlabel('Время');
+         ylabel('Популяция');
+         legend('Жертвы', 'Хищники', 'Питание');
+         hold on;
+%        plot(x1, alpha1,'g');
+%        xlabel('Preys');
+%        ylabel('Food');
+%        hold on;
+%        subplot(223);
+%        plot(x2, alpha1, 'r');
+%        xlabel('Predators');
+%        ylabel('Food');
+%        hold on;
+%        subplot(224);
+%        plot3(x1, x2, alpha1);
+%        xlabel('Preys');
+%        ylabel('Predators');
+%        zlabel('Food');
+%        legend('Preys', 'Predators', 'Food');
+%        hold on;
     end
 %     if((j >= 24) && (j <= 26))
 %        subplot(132);
@@ -65,5 +69,3 @@ for j = 1:1:size(T, 1)
 %     if((j > 60) && (j <= 71))
 %        subplot(325);
 %     end
-    
-end
