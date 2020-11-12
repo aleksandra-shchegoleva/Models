@@ -10,14 +10,14 @@ U(1) = 0;
 
 e1 = 10^3; %критерий устойчивости
 flag = 0;
-real_data(:,1) = xlsread("data.xlsx", 'I3:I5');
-real_data(:,2) = xlsread("data.xlsx", 'K3:K5');
-real_data(:,1) = real_data(:,1).*1000;
-real_data(:,2) = real_data(:,2);
+real_data(:,1) = xlsread("data.xlsx", 'H3:H5');
+real_data(:,2) = xlsread("data.xlsx", 'J3:J5');
+real_data(:,1) = real_data(:,1)./100000;
+real_data(:,2) = real_data(:,2)./1000;
 
 x2(1) = real_data(1, 2); %начальные условия численности зоопланктона
-alpha1(1) = 0.5; %начальные условия питания
 k = 2;
+B = 100;
 xc = real_data(1, 1).*k;
 e2 = .01 * xc; %критерий достижения цели
 x1(1) = real_data(1, 1); %начальные условия численности фитопланктона
@@ -26,12 +26,14 @@ mas = [];
 mas_stab = [];
 data = [];
 
-for alpha2 = 0.001:0.001:1
-for beta1 = 0.00001:0.0001:1
-for beta2 = 0.00001:0.0001:1
-for B = 100:10:200
-for T1 = .01:0.01:2
-for T2 = 10^4:10000:10^7
+for a1 = 0.01:0.01:0.5
+    alpha1(1) = a1;
+for alpha2 = 0.01:0.01:1
+for beta1 = 0.001:0.001:1
+for beta2 = 0.001:0.001:1
+% for B = 100:10:200
+for T1 = 1:10
+for T2 = 1:10
 for n=1:(length(M) - 1)
       f1 = alpha1(n)*x1(n) - beta1*x1(n)*x2(n);
        f2 = -alpha2*x2(n) + beta2*x1(n)*x2(n);
@@ -68,6 +70,7 @@ for n=1:(length(M) - 1)
 end
     if flag == 0 && T1 ~= 0 && T2 ~= 0
         mas_stab(end + 1, :) = [k B T1 T2 alpha1(1) alpha2 beta1 beta2];
+        disp([k B T1 T2 alpha1(1) alpha2 beta1 beta2]);
 %     for i=1:100
 %        if abs(mean(x1(i:100)) - xc) <= e2 && abs(x1(i + 1) - xc) <= e2
 %             mas(end + 1, :) = [k i T1 T2 alpha1(1) alpha2 beta1 beta2];
@@ -84,3 +87,4 @@ end
 end
 end
 end
+% end

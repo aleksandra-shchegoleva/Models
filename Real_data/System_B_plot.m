@@ -9,24 +9,23 @@ alpha1 = zeros(1, length(M));
 U(1) = 0;
 
 flag = 0;
-time = [0; 84; 153];
-real_data(:,1) = xlsread("data.xlsx", 'I3:I5');
-real_data(:,2) = xlsread("data.xlsx", 'K3:K5');
-real_data(:,1) = real_data(:,1).*1000;
-real_data(:,2) = real_data(:,2);
+real_data(:,1) = xlsread("data.xlsx", 'H3:H5');
+real_data(:,2) = xlsread("data.xlsx", 'J3:J5');
+real_data(:,1) = real_data(:,1)./100000;
+real_data(:,2) = real_data(:,2)./1000;
 
-k = 1.5;
+k = 2;
 xc = real_data(1, 1).*k;
 x1(1) = real_data(1, 1); %начальные условия численности фитопланктона
 x2(1) = real_data(1, 2); %начальные условия численности зоопланктона
-alpha1(1) = 0.5; %начальные условия питания
+alpha1(1) = 0.01; %начальные условия питания
 
-alpha2 = 0.01;
-beta1 = 0.0021;
-beta2 = 0.0011;
-B = 500.0;
-T1 = 1.9;
-T2 = 1925000;
+alpha2 = 0.04;
+beta1 = 0.005;
+beta2 = 0.001;
+B = 100.0;
+T1 = 8.0;
+T2 = 10.0;
 
 for n=1:(length(M) - 1)
       f1 = alpha1(n)*x1(n) - beta1*x1(n)*x2(n);

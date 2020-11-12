@@ -7,7 +7,7 @@ mas = [];
 x1 = zeros(1, length(M));
 x2 = zeros(1, length(M));
 
-e1 = 10^6; %stability criterion
+e1 = 10^6; %критерий стабильности
 flag = 0;
 time = [0; 85; N];
 % %загрузка данных из Excel файла (попул€ци€)
