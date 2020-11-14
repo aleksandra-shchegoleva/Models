@@ -50,7 +50,7 @@ for n = 1:(length(M) - 1)
     end
 end
     if flag == 0 
-       for i=1:N-1
+       for i=1:length(M) - 1
            if abs(x1(i) - xc) <= e2 && abs(x1(i + 1) - xc) <= e2 && abs(x1(length(M)) - xc) <= e2 && i < MIN
                 MIN = i;
                 data(end + 1,:) = [i T1 T2 alpha1(1) alpha2 beta1 beta2];
