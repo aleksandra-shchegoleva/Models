@@ -87,7 +87,7 @@ beta2 = mas(4);
 MIN = 100;
 data = [];
 
-for j = size(mas,1):-1:floor(size(mas,1)/2)
+for j = size(mas,1):-1:floor(size(mas,1)/4)
     alpha1(1) = mas(j,1);
     alpha2 = mas(j,2);
     beta1 = mas(j,3);

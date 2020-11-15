@@ -1,29 +1,29 @@
-N = 154; %РІСЂРµРјВ¤
-h = 1; %С€Р°Рі
+N = 154; %время
+h = 1; %шаг
 
-M = 0:h:N; %СЃРµС‚РєР° РІСЂРµРјРµРЅРё
+M = 0:h:N; %сетка времени
 
 mas = [];
 x1 = zeros(1, length(M));
 x2 = zeros(1, length(M));
 
-e1 = 10^6; %РєСЂРёС‚РµСЂРёР№ СЃС‚Р°Р±РёР»СЊРЅРѕСЃС‚Рё
+e1 = 10^6; %критерий стабильности
 flag = 0;
 time = [0; 85; N];
-% %Р·Р°РіСЂСѓР·РєР° РґР°РЅРЅС‹С… РёР· Excel С„Р°Р№Р»Р° (РїРѕРїСѓР»В¤С†РёВ¤)
+% Загрузка данных из Excel (биомасса)
 % real_data(:,1) = xlsread("data.xlsx", 'H3:H5');
 % real_data(:,2) = xlsread("data.xlsx", 'J3:J5');
 % real_data(:,1) = real_data(:,1)./100000;
 % real_data(:,2) = real_data(:,2)./1000;
-% %Р·Р°РіСЂСѓР·РєР° РґР°РЅРЅС‹С… РёР· Excel С„Р°Р№Р»Р° (Р±РёРѕРјР°СЃСЃР°)
+% Загрузка данных из Excel (численность)
 % real_data(:,1) = xlsread("data.xlsx", 'I3:I5');
 % real_data(:,2) = xlsread("data.xlsx", 'K3:K5');
 % real_data(:,1) = real_data(:,1).*1000;
 % real_data(:,2) = real_data(:,2);
 
-x1(1) = real_data(1, 1); %initial conditions of phytoplankton
-x2(1) = real_data(1, 2); %initial conditions of zooplankton
-xc = real_data(3, 1); %С†РµР»РµРІРѕРµ Р·РЅР°С‡РµРЅРёРµ
+x1(1) = real_data(1, 1); %начальные данные фитопланктона
+x2(1) = real_data(1, 2); %начальные данные зоопланктона
+xc = real_data(3, 1); %целевое значение
 
 M1 = zeros(1, 3);
 M2 = zeros(1, 3);
@@ -51,12 +51,12 @@ for n=1:(length(M) - 1)
         end
 end
     if flag == 0
-        %СЂР°СЃС‡РµС‚ СЂР°Р·РјРµСЂР° РѕС€РёР±РєРё
+        %нахождение размера ошибки
         for i=1:3
          M1(1, i) = (real_data(i, 1) - x1(time(i, :) + 1))^2;
          M2(1, i) = (real_data(i, 2) - x2(time(i, :) + 1))^2;
         end
-        %РїСЂРѕРІРµСЂРєР° СЂР°Р·РјРµСЂР° РѕС€РёР±РєРё
+        %сравнение рассчитанной ошибки с минимальной
         if sum(M1) + sum(M2) < sum(MIN)
             MIN = M1 + M2;
             mas(end + 1, :) = [alpha1 alpha2 beta1 beta2];
