@@ -9,7 +9,7 @@
 * **`Stability_B_r`** - код, находящие коэффициенты системы с управлением, ограничением и коэффициентом r, при которых она стабильная и достигается цель, на выходе получаем массив значений коэффициентов
 ### Real_data
 Здесь лежат файлы, использующие данные мониторинга из файла Excel (формат файла)
-* **`System_U`** - код, строющий график системы с управлением, исходные данные берутся из файла Excel
+* **[System_U](https://github.com/aleksandra-shchegoleva/matlab/blob/master/Real_data/System_U.m)** - код, строющий график системы с управлением, исходные данные берутся из файла Excel
 * **[Search_coeff](https://github.com/aleksandra-shchegoleva/matlab/blob/master/Real_data/Search_coeff.m)** - код, находящие коэффициенты для системы без управления, при которых система наиболее приближена к данным мониторинга (описание способа)
 * **[Stability_U](https://github.com/aleksandra-shchegoleva/matlab/blob/master/Real_data/Stability_U.m)** - код, находящие коэффициенты системы с управлением, при которых она стабильная и достигается цель, на выходе получаем массив значений коэффициентов
 * **[plot_system_full](https://github.com/aleksandra-shchegoleva/matlab/blob/master/Real_data/plot_system_full.m)** - построене системы с управлением по введенным начальными данными (объединение файлов Search_coeff, Stability_U, System_U)
