@@ -1,4 +1,4 @@
-function y=plot_system_full(N, h, x1Init, x2Init, k, date)
+function y=plot_system_full(h, x1Init, x2Init, k, date, type)
 
 M = 0:h:date(3); %сетка времени
 
@@ -16,11 +16,21 @@ mas = [];
 M1 = zeros(1, 3);
 M2 = zeros(1, 3);
 MIN = [10^6 10^6 10^6];
+%относительно формата данных выбирается диапозон для beta1 и beta2
+if type == 1
+    betaInit = 0.0001;
+    betastep = 0.0001;
+    betaend = 0.02;
+else
+    betaInit = 0.001;
+    betastep = 0.001;
+    betaend = 0.1;
+end
 
-for alpha1 = 0.01:0.01:0.5
-for alpha2 = 0.01:0.01:0.5
-for beta1 = 0.001:0.001:0.5
-for beta2 = 0.001:0.001:0.5
+for alpha1 = 0.01:0.01:1
+for alpha2 = 0.01:0.01:1
+for beta1 = betaInit:betastep:betaend
+for beta2 = betaInit:betastep:betaend
     
 for n=1:(length(M) - 1)
       f1 = alpha1*x1(n) - beta1*x1(n)*x2(n);
@@ -61,21 +71,17 @@ U(1) = 0;
 
 xc = x1(1) * k; %целевое значение
 e2 = 0.05 * xc;
-alpha1(1) = mas(1); %начальное значение питания
-%массив mas хранит полученные коэффициенты
-alpha2 = mas(2);
-beta1 = mas(3);
-beta2 = mas(4);
 MIN = 100;
 data = [];
+%массив mas хранит полученные коэффициенты
 
-for j = size(mas,1):-1:floor(size(mas,1)/4)
+for j = size(mas,1):-1:1
     alpha1(1) = mas(j,1);
     alpha2 = mas(j,2);
     beta1 = mas(j,3);
     beta2 = mas(j,4);
-for T1 = 0:100
-for T2 = 0:100
+for T1 = 0:0.1:50
+for T2 = 0:0.1:200
 for n=1:(length(M) - 1)
       f1 = alpha1(n)*x1(n) - beta1*x1(n)*x2(n);
        f2 = -alpha2*x2(n) + beta2*x1(n)*x2(n);
@@ -118,26 +124,29 @@ end
 end
 end
 
+if ~isempty(data)
+    T1 = data(2);
+    T2 = data(3);
+    alpha1(1) = data(4);
+    alpha2 = data(5);
+    beta1 = data(6);
+    beta2 = data(7);
 
-T1 = data(2);
-T2 = data(3);
-alpha1(1) = data(4);
-alpha2 = data(5);
-beta1 = data(6);
-beta2 = data(7);
+    for n=1:(length(M) - 1)
+          f1 = alpha1(n)*x1(n) - beta1*x1(n)*x2(n);
+           f2 = -alpha2*x2(n) + beta2*x1(n)*x2(n);
 
-for n=1:(length(M) - 1)
-      f1 = alpha1(n)*x1(n) - beta1*x1(n)*x2(n);
-       f2 = -alpha2*x2(n) + beta2*x1(n)*x2(n);
+            dfdt = - (xc / (T2 * x1(n) * x1(n))) * f1 + beta1 * f2;
+            fi = -( (x1(n) - xc)/(T2*x1(n)) ) + beta1*x2(n);
+            psi1 = alpha1(n) - fi;
+            U(n + 1) = -(psi1 / T1) + dfdt;
+            f3 = U(n);
 
-        dfdt = - (xc / (T2 * x1(n) * x1(n))) * f1 + beta1 * f2;
-        fi = -( (x1(n) - xc)/(T2*x1(n)) ) + beta1*x2(n);
-        psi1 = alpha1(n) - fi;
-        U(n + 1) = -(psi1 / T1) + dfdt;
-        f3 = U(n);
- 
-       x1(n + 1) = x1(n) + h*f1;
-        x2(n + 1) = x2(n) + h*f2;
-        alpha1(n + 1) = alpha1(n) + h*f3;
+           x1(n + 1) = x1(n) + h*f1;
+            x2(n + 1) = x2(n) + h*f2;
+            alpha1(n + 1) = alpha1(n) + h*f3;
+    end
+    y = [x1; x2; alpha1];
+else
+   y = 'Система не имеет решений'; 
 end
-y = [x1; x2; alpha1];
