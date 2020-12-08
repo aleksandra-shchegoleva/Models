@@ -4,7 +4,7 @@ Time = table();
 
 %определение времени
 Tabledata = readtable(FILE,'ReadVariableNames',false);
-rows = size(Tabledata, 1) - 1;
+rows = size(Tabledata, 1);
 date = datetime(Tabledata.Var3(3:rows,:));
 diff_date = caldays(caldiff(date, 'days'));
 DATE = [];
