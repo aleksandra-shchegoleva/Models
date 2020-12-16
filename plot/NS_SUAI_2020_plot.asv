@@ -1,0 +1,126 @@
+font = 20; %размер шрифта для подписи осей (кроме рисунка 1)
+font_fig1 = 16; %размер шрифта для подписи оси y и названий графиков (рисунок 1)
+font_fig1_x = 14; %размер шрифта для подписис оси x (рисунок 1)
+font_fig1_legend = 11; %размер шрифта для легенды (рисунок 1)
+width = 3; %ширина линий на рисунках
+%% ИСХОДНЫЕ ДАННЫЕ СОДЕРЖИТСЯ В ФАЙЛАХ DATAx.MAT, ГДЕ х - НОМЕР РИСУНКА. ДЛЯ РИСУНКА 1 ВСЕ ИСХОДНЫЕ ДАННЫЕ
+%% УЖЕ ВЫБРАНЫ, ДЛЯ РИСУНКА 12 ФАЙЛЫ ИМЕЮТ НАЗВАНИЕ DATA12-x, ГДЕ х - РИСУНОК А ИЛИ Б
+%% В ФУНКЦИИ LOAD ВЫБИРИРАЕТСЯ ФАЙЛ ДЛЯ ПОСТРОЕНИЯ ГРАФИКА, У КАЖДОГО ГРАФИКА УКАЗАНО ДЛЯ КАКИХ РИСУНКОВ ОН СТРОИТСЯ
+
+%% –»—”Ќќ  1
+% load('data1-1.mat');
+% subplot(221);
+% plot(M, x1, 'g','Linewidth',width);
+% axis([0 N -inf inf]);
+% hold on;
+% plot(M, x2, 'r', 'Linewidth',width);
+% hold on;
+% plot(M, alpha1, 'b', 'Linewidth', width);
+% hold on;
+% plot(M, ones(length(M)).*xc, '--k','Linewidth', width-1);
+% title(['T_1 = ',num2str(T1), ', T_2 = ', num2str(T2)], 'FontSize', font_fig1);
+% xlabel('¬рем€', 'FontSize', font_fig1_x);
+% ylabel('„исленность', 'FontSize', font_fig1);
+% legend('∆ертвы', '’ищники','ѕитание', '÷елевое значение', 'FontSize', font_fig1_legend);
+% 
+% load('data1-2.mat');
+% subplot(222);
+% plot(M, x1, 'g','Linewidth',width);
+% axis([0 N -inf inf]);
+% hold on;
+% plot(M, x2, 'r', 'Linewidth',width);
+% hold on;
+% plot(M, alpha1, 'b', 'Linewidth', width);
+% hold on;
+% plot(M, ones(length(M)).*xc, '--k','Linewidth',width-1);
+% title(['T_1 = ',num2str(T1), ', T_2 = ', num2str(T2)], 'FontSize', font_fig1);
+% xlabel('¬рем€', 'FontSize', font_fig1_x);
+% ylabel('„исленность', 'FontSize', font_fig1);
+% legend('∆ертвы', '’ищники','ѕитание', '÷елевое значение', 'FontSize', font_fig1_legend);
+% 
+% load('data1-1.mat');
+% subplot(223);
+% plot(M, x1, 'g','Linewidth',width);
+% axis([0 N -inf inf]);
+% hold on;
+% plot(M, x2, 'r', 'Linewidth',width);
+% hold on;
+% plot(M, alpha1, 'b', 'Linewidth', width);
+% hold on;
+% plot(M, ones(length(M)).*xc, '--k','Linewidth',width-1);
+% title(['T_1 = ',num2str(T1), ', T_2 = ', num2str(T2)], 'FontSize', font_fig1);
+% xlabel('¬рем€', 'FontSize', font_fig1_x);
+% ylabel('„исленность', 'FontSize', font_fig1);
+% legend('∆ертвы', '’ищники','ѕитание', '÷елевое значение', 'FontSize', font_fig1_legend);
+% 
+% load('data1-3.mat');
+% subplot(224);
+% plot(M, x1, 'g','Linewidth',width);
+% axis([0 N -inf inf]);
+% hold on;
+% plot(M, x2, 'r', 'Linewidth',width);
+% hold on;
+% plot(M, alpha1, 'b', 'Linewidth', width);
+% hold on;
+% plot(M, ones(length(M)).*xc, '--k','Linewidth',width-1);
+% title(['T_1 = ',num2str(T1), ', T_2 = ', num2str(T2)], 'FontSize', font_fig1);
+% xlabel('¬рем€', 'FontSize', font_fig1_x);
+% ylabel('„исленность', 'FontSize', font_fig1);
+% legend('∆ертвы', '’ищники','ѕитание', '÷елевое значение', 'FontSize', font_fig1_legend);
+
+
+%% –»—”Ќ » 2-3
+% load('data3.mat');
+% plot(M, x1, 'g','Linewidth',width);
+% axis([0 N -inf inf]);
+% hold on;
+% plot(M, x2, 'r', 'Linewidth',width);
+% hold on;
+% plot(M, alpha1, 'b', 'Linewidth', width);
+% hold on;
+% plot(M, ones(length(M)).*xc, '--k','Linewidth',width-1);
+% xlabel('¬рем€', 'FontSize', font);
+% ylabel('„исленность', 'FontSize', font);
+% legend('∆ертвы', '’ищники','ѕитание', '÷елевое значение', 'FontSize', font);
+
+
+%% –»—”Ќ » 4,7 (‘ј«ќ¬џ… ѕќ–“–≈“)
+% load('data4.mat');
+% plot(x1, x2, 'b','Linewidth',width);
+% xlabel('X_1', 'FontSize', font);
+% ylabel('X_2', 'FontSize', font);
+
+
+%% –»—”Ќ » 5,8 (ƒќ—“»∆≈Ќ»≈ ÷≈Ћ»)
+% load('data8.mat');
+% plot(M, PSI, 'g','Linewidth',width);
+% xlabel('¬рем€', 'FontSize', font);
+% ylabel('{\psi}', 'FontSize', font);
+
+
+%% –»—”Ќ » 6,9,10,11 (—»—“≈ћј — ќ√–јЌ»„≈Ќ»≈ћ)
+% load('data11.mat');
+% plot(M, x1, 'g','Linewidth',width);
+% axis([0 N -inf inf]);
+% hold on;
+% plot(M, x2, 'r', 'Linewidth',width);
+% hold on;
+% plot(M, alpha1, 'b', 'Linewidth', width);
+% hold on;
+% plot(M, ones(length(M)).*xc, '--k','Linewidth',width-1);
+% hold on;
+% plot(M, ones(length(M)).*B, '--m','Linewidth',width-1);
+% xlabel('¬рем€', 'FontSize', font);
+% ylabel('„исленность', 'FontSize', font);
+% % дл€ рисунка 6 легенда расположена справа внизу
+% % legend('∆ертвы', '’ищники','ѕитание', '÷елевое значение', 'ќграничение B', 'FontSize', font, 'Location', 'southeast');
+% % дл€ остальных легенда расположена справа сверху
+% legend('∆ертвы', '’ищники','ѕитание', '÷елевое значение', 'ќграничение B', 'FontSize', font);
+
+
+%% –»—”Ќќ  12 (3D графики)
+% load('data12-1.mat');
+% plot3(mas(:,1), mas(:,2), mas(:,3), 'o');
+% xlabel('h', 'FontSize', font);
+% ylabel('T2', 'FontSize', font);
+% zlabel('T1', 'FontSize', font);
