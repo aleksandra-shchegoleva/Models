@@ -1,7 +1,7 @@
 # Структура репозитория
 ### NAS
 * **[plot_NAS](https://github.com/aleksandra-shchegoleva/matlab/blob/master/NAS/plot_NAS.m)** - код для построения системы с применением алгоритма NAS
-* * **[apply_NAS](https://github.com/aleksandra-shchegoleva/matlab/blob/master/NAS/apply_NAS.pdf)** - файл с описанием системы
+* **[apply_NAS](https://github.com/aleksandra-shchegoleva/matlab/blob/master/NAS/apply_NAS.pdf)** - файл с описанием системы
 ### Файлы, лежащие вне папок
 Здесь лежат общие файлы без привязки к каким-либо данным
 * **[System_U](https://github.com/aleksandra-shchegoleva/matlab/blob/master/System_U.m)** - код для построения системы с управлением
