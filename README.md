@@ -1,4 +1,7 @@
 # Структура репозитория
+### methods_approximation_monitoring_data
+* **[Classic_LS_SW](https://github.com/aleksandra-shchegoleva/matlab/blob/master/methods_approximation_monitoring_data/Classic_LS_SW.m)** - подбор коэффициентов для дискретной системы "хищник-жертва" с помощью классического метода наименьших квадратов
+* **[SW_2019_data](https://github.com/aleksandra-shchegoleva/matlab/blob/master/methods_approximation_monitoring_data/SW_2019_data)** - шведские данные мониторинга за 2019 год (некоторые виды)
 ### NAS
 * **[plot_NAS](https://github.com/aleksandra-shchegoleva/matlab/blob/master/NAS/plot_NAS.m)** - код для построения системы с применением алгоритма NAS
 * **[apply_NAS](https://github.com/aleksandra-shchegoleva/matlab/blob/master/NAS/apply_NAS.pdf)** - файл с описанием системы
