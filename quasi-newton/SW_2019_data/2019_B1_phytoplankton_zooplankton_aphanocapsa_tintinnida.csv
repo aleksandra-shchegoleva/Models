@@ -1,0 +1,5 @@
+Data_type,Reported_station_name,Sampling_date,Scientific_name,ValuePhytoplankton,Data_type,Scientific_name,ValueZooplankton
+Phytoplankton,B1,2019-07-29,Aphanocapsa,123.475000000,Zooplankton,Tintinnida,81.028600000
+Phytoplankton,B1,2019-08-13,Aphanocapsa,0.445500000,Zooplankton,Tintinnida,4.057140000
+Phytoplankton,B1,2019-08-26,Aphanocapsa,1.113750000,Zooplankton,Tintinnida,0.651429000
+Phytoplankton,B1,2019-10-08,Aphanocapsa,3.620000000,Zooplankton,Tintinnida,0.171429000
