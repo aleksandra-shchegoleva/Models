@@ -1,53 +1,61 @@
 
-function [M,u,x] = sol_add_NPZ_xc(xc, T1, T2, h, plotting, N, x, coeffs)
+function [M,u,x] = sol_add_NPZ_rho_d_bigphase(rho, q, T1, T2, h, plotting, N, x, coeffs)
 %     Выполняет численное моделирование NPZ-модели с аддитивным управлением
-%     Цель: достижение фитопланктоном заданного значения
+%     с расширением фазового пространства
+%     Цель: достижение популяциями фитопланктона и зоопланктона
+%     пропорциональных значений
 %     
-%     X = SOL_ADD_NPZ_XC(XC, T1, T2, H, PLOTTING, N, X, COEFFS)
+%     X = SOL_ADD_NPZ_RHO_D_BIGPHASE(RHO, Q, T1, T2, H, PLOTTING, N, X, COEFFS)
 %     
 %     ARGUMENTS
-%     xc [float] целевое значение фитопланктона (x2)
+%     rho [float] коэффициент пропорциональности
+%     q [float] максимальная емкость среды
 %     T1 [float] параметр T1, влияющий на скорость переходного процесса
 %     T2 [float] параметр T2, влияющий на скорость переходного процесса
 %     h [float] шаг сетки для численного метода Эйлера
 %     plotting [boolean] параметр для построения графика. 
 %     Если принимает значение true, то график выводится в figure, 
 %     если false, то возвращается только численное решение.
-%     N [int] время для построения модели
-%     x [1, 3] начальные условия для дифференциальных уравнений [x1(0), x2(0), x3(0)]
-%     coeffs [1, 4] коэффициенты модели [a, b, c, d]
-%     
-%     По умолчанию 
-%     x = [0.35, 0.4, .25]
-%     coeffs = [.05, 1, 25.003, 1.8]
+%     N [int] временной интервал
+%     x [1, 3] начальные значения для дифференциальных уравнений [x1(0), x2(0), x3(0)]
+%     coeffs [1, 4] коэффициенты модели [a, b, c, d]. Необязательный
+%     аргумент
 %     
 %     OUTPUT
 %     x [N, 3] массив с численным решением дифференциального уравнения [x1, x2, x3]
-%     
+%      
 
-    if nargin < 8
+    if nargin < 9
         x = [0.35, 0.4, .25];
         coeffs = [.05, 1, 25.003, 1.8];
     end
-    M = 0:h:N; % сетка для численного решения
-    u = 0; % начальное значение функции управления
+%     сетка для метода Эйлера
+    M = 0:h:N;
+    u = 0;
 
 %     решение системы ОДУ
     [a, b, c, d] = deal(coeffs(1), coeffs(2), coeffs(3), coeffs(4));
-    
-%     расчет стационарных точек
-    if xc < b/d
-        stpoints = [a/c, b/d, 0];
+    if q > (b-a*rho)/d && q > b/d
+        x1c = (a*rho-b+d*q)/(c*rho);
+        x2c = b/d;
+        x3c = (d*q-b)/(d*rho);
+    else
+        x1c = a/c;
+        x2c = q;
+        x3c = 0;
     end
 
-%     решение методом Эйлера
+%     численное решение системы методом Эйлера
     for i=1:length(M)-1
         f2 = c*x(i,1)*x(i,2)-d*x(i,2)*x(i,3)-a*x(i,2);
         f3 = d*x(i,2)*x(i,3) - b*x(i,3);
-        psi = x(i,2) - xc;
-        dphidt = ((-f2/T2 + d*(f2*x(i,3) + x(i,2)*f3) + a*f2)*x(i,2) - (-psi/T2 + ...
-            d*x(i,2)*x(i,3) + a*x(i,2))*f2)/(c*x(i,2)^2);
-        phi = (-psi/T2 + d*x(i,2)*x(i,3) + a*x(i,2)) / (c*x(i,2));
+        psi = x(i,2) + rho*x(i,3) - q;
+        phi = (-psi/T2 + d*x(i,2)*x(i,3) + a*x(i,2) + rho*(d*x(i,2)*x(i,3)...
+            - b*x(i,3)))/(c*x(i,2));
+        dphidt = ((-(f2+rho*f3)/T2 + d*(f2*x(i,3) + x(i,2)*f3) + a*f2 - ...
+            rho*(d*(f2*x(i,3) + x(i,2)*f3) - b*f3))*x(i,2) - ...
+            (-psi/T2 + d*x(i,2)*x(i,3) + a*x(i,2) - rho*(d*x(i,2)*x(i,3) - ...
+            b*x(i,3)))*f2)/(c*x(i,2)^2);
         psi1 = x(i,1) - phi;
         u(i+1) = -psi1/T1 - a*x(i,2) - b*x(i,3) + c*x(i,1)*x(i,2) + dphidt;
         f1 = a*x(i,2) + b*x(i,3) - c*x(i,1)*x(i,2) + u(i);
@@ -56,13 +64,14 @@ function [M,u,x] = sol_add_NPZ_xc(xc, T1, T2, h, plotting, N, x, coeffs)
         x(i+1,2) = x(i,2) + h*f2;
         x(i+1,3) = x(i,3) + h*f3;
     end
-
 %     построение графика
     if plotting
+        stpoints = [x1c, x2c, x3c];
         x1_str = texlabel('x_1(0) = ');
         x2_str = texlabel('x_2(0) = ');
         x3_str = texlabel('x_3(0) = ');
-        xc_str = texlabel('xc = ');
+        rho_str = texlabel('rho = ');
+        q_str = texlabel('q = ');
         a_str = texlabel('a = ');
         b_str = texlabel('b = ');
         c_str = texlabel('c = ');
@@ -72,16 +81,16 @@ function [M,u,x] = sol_add_NPZ_xc(xc, T1, T2, h, plotting, N, x, coeffs)
         h_str = texlabel('h = ');
 
         str = {strcat(x1_str,string(x(1,1))),strcat(x2_str,string(x(1,2))),...
-            strcat(x3_str,string(x(1,3))),strcat(xc_str,string(xc)),...
-            strcat(a_str,string(coeffs(1))),strcat(b_str,string(coeffs(2))),...
-            strcat(c_str,string(coeffs(3))),strcat(d_str,string(coeffs(4)))...
-            strcat(T1_str,string(T1)),strcat(T2_str,string(T2))...
-            strcat(h_str,string(h)), 'Метод Эйлера'};
+            strcat(x3_str,string(x(1,3))),strcat(rho_str,string(rho)),...
+            strcat(q_str,string(q)),strcat(a_str,string(coeffs(1))),...
+            strcat(b_str,string(coeffs(2))),strcat(c_str,string(coeffs(3))),...
+            strcat(d_str,string(coeffs(4))),strcat(T1_str,string(T1)),...
+            strcat(T2_str,string(T2)),strcat(h_str,string(h)), 'Метод Эйлера'};
         width      = 10;
         height     = 7.5;
         fontsize = 20;
 
-        fig = figure('Units','inches','Position',[1 1 width height],'PaperPositionMode','auto');
+        fig = figure('Units','inches','Position',[1 1 width-4 height-3],'PaperPositionMode','auto');
         box on;
         grid on;
         hold on;
@@ -91,6 +100,7 @@ function [M,u,x] = sol_add_NPZ_xc(xc, T1, T2, h, plotting, N, x, coeffs)
         ylabel('Управление');
         set(fig.Children, 'FontName','Times', 'FontSize',fontsize);
         set(gca,'LooseInset', max(get(gca,'TightInset'), 0.02))
+        print(fig,'E:\YandexDisk\Study\Наука\Мат. модели\Статьи и книги\Мои\Статья с NPZ и TPP\1б','-dpng','-r600')
         
         fig = figure('Units','inches','Position',[1 1 width height],'PaperPositionMode','auto');
         text(1,1,str,'Units','normalized','HorizontalAlignment', 'right', 'VerticalAlignment',...
@@ -105,9 +115,9 @@ function [M,u,x] = sol_add_NPZ_xc(xc, T1, T2, h, plotting, N, x, coeffs)
         plot(M, stpoints .* ones(length(M), 3), 'k--', 'Linewidth',2);
         xlabel('Время, дни');
         ylabel('Популяция, ед/л');
-        legend({'Питание (x_{1})', 'Фитопланктон (x_{2})', 'Зоопланктон (x_{3})', 'x_{1s}', 'x_{2}*'}, 'Location','southeast');
-        set(fig.Children, 'FontName','Times', 'FontSize',fontsize);
+        legend({'Питание (x_{1})', 'Фитопланктон (x_{2})', 'Зоопланктон (x_{3})', 'x_{1s}', 'x_{2s}', 'x_{3s}'}, 'Location','northeast');
+        set(fig.Children, 'FontName','Times', 'FontSize',fontsize-2);
         set(gca,'LooseInset', max(get(gca,'TightInset'), 0.02))
     end
-    
+    end
 end
