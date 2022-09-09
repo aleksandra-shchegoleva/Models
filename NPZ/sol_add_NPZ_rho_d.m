@@ -5,7 +5,7 @@ function [M,u,x] = sol_add_NPZ_rho_d(rho, q, T1, h, plotting, N, x, coeffs)
 %     Цель: достижение популяциями фитопланктона и зоопланктона
 %     пропорциональных значений
 %     
-%     X = SOL_ADD_NPZ_RHO_D(RHO, Q, PLOTTING, N, X, COEFFS)
+%     X = SOL_ADD_NPZ_RHO_D(RHO, Q, T1, H, PLOTTING, N, X, COEFFS)
 %     
 %     ARGUMENTS
 %     rho [float] коэффициент пропорциональности
