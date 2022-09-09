@@ -24,6 +24,8 @@ function [M,u,x] = sol_add_NPZ_rho_d(rho, q, T1, h, plotting, N, x, coeffs)
 %     coeffs = [.05, 1, 25.003, 1.8]
 %     
 %     OUTPUT
+%     M [1, N] временная сетка
+%     u [1, N] управление
 %     x [N, 3] массив с численным решением дифференциального уравнения [x1, x2, x3]
 %     
 

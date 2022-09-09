@@ -22,6 +22,8 @@ function [M,u,x] = sol_add_NPZ_rho_d_bigphase(rho, q, T1, T2, h, plotting, N, x,
 %     аргумент
 %     
 %     OUTPUT
+%     M [1, N] временная сетка
+%     u [1, N] управление
 %     x [N, 3] массив с численным решением дифференциального уравнения [x1, x2, x3]
 %      
 
