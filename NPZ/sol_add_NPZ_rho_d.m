@@ -29,7 +29,7 @@ function [M,u,x] = sol_add_NPZ_rho_d(rho, q, T1, h, plotting, N, x, coeffs)
 %     x [N, 3] массив с численным решением дифференциального уравнения [x1, x2, x3]
 %     
 
-    if nargin < 6
+    if nargin < 7
         x = [0.35, 0.4, .25];
         coeffs = [.05, 1, 25.003, 1.8];
     end
@@ -100,14 +100,15 @@ function [M,u,x] = sol_add_NPZ_rho_d(rho, q, T1, h, plotting, N, x, coeffs)
         hold on;
         plot(M, u, 'k','Linewidth',3);
         axis([0 N -inf inf]);
-        xlabel('Время, дни');
-        ylabel('Управление');
+        xlabel('Time, days');
+        ylabel('Control');
         set(fig.Children, 'FontName','Times', 'FontSize',fontsize);
         set(gca,'LooseInset', max(get(gca,'TightInset'), 0.02))
+        print(fig,'E:\YandexDisk\Study\Наука\Мат. модели\Статьи и книги\Мои\Статья с NPZ и TPP\eng\3b','-dpng','-r600')
         
         fig = figure('Units','inches','Position',[1 1 width height],'PaperPositionMode','auto');
-        text(1,1,str,'Units','normalized','HorizontalAlignment', 'right', 'VerticalAlignment',...
-            'top','FontSize',15);
+%         text(1,1,str,'Units','normalized','HorizontalAlignment', 'right', 'VerticalAlignment',...
+%             'top','FontSize',15);
         box on;
         grid on;
         hold on;
@@ -116,11 +117,12 @@ function [M,u,x] = sol_add_NPZ_rho_d(rho, q, T1, h, plotting, N, x, coeffs)
         plot(M, x(:,2), 'r', 'Linewidth',3);
         plot(M, x(:,3), 'b', 'Linewidth',3);
         plot(M, stpoints .* ones(length(M), 3), 'k--', 'Linewidth',2);
-        xlabel('Время, дни');
-        ylabel('Популяция, ед/л');
-        legend({'Питание (x_{1})', 'Фитопланктон (x_{2})', 'Зоопланктон (x_{3})', 'x_{1s}', 'x_{2s}', 'x_{3s}'}, 'Location','southeast');
+        xlabel('Time, days');
+        ylabel('Population, units/l');
+        legend({'Nutrition (x_{1})', 'Phytoplankton (x_{2})', 'Zooplankton (x_{3})', 'x_{1s}', 'x_{2s}', 'x_{3s}'}, 'Location','northeast');
         set(fig.Children, 'FontName','Times', 'FontSize',fontsize);
         set(gca,'LooseInset', max(get(gca,'TightInset'), 0.02))
+        print(fig,'E:\YandexDisk\Study\Наука\Мат. модели\Статьи и книги\Мои\Статья с NPZ и TPP\eng\3a','-dpng','-r600')
     end
 
 end

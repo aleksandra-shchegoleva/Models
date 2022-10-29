@@ -1,20 +1,20 @@
-function y=parse_date(FILE)
+function t =parse_date(FILE)
 
 Time = table();
 
 %определение времени
 Tabledata = readtable(FILE,'ReadVariableNames',false);
 rows = size(Tabledata, 1);
-date = datetime(Tabledata.Var3(3:rows,:));
-diff_date = caldays(caldiff(date, 'days'));
-DATE = [];
-for i = 1:3:length(diff_date)
-    DATE = [DATE; 0; diff_date(i); diff_date(i) + diff_date(i+1)];
+date = Tabledata.Var3;
+
+% расчет разности между датами
+t_diff = days(diff(date));
+t = 0;
+% расчет номера дня с начала наблюдений для каждого измерения
+for i=1:length(t_diff)
+    if i == 3
+       t(end+1) = 0;
+    else
+        t(end+1) = t(i) + t_diff(i);
+    end
 end
-DATE = table(DATE);
-Time = [Time DATE];
-
-%номера станций
-Time = [Time, Tabledata.Var2(3:rows,:)];
-
-y = Time;

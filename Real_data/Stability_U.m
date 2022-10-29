@@ -1,92 +1,123 @@
-N = 154; %период
-h = 1; %шаг
+N = 100;
+h = .01;
+M = 0:h:N;
 
-M = 0:h:N; %сетка времени
-
-x1 = zeros(1, length(M));
-x2 = zeros(1, length(M));
-alpha1 = zeros(1, length(M));
-U(1) = 0;
-
-e1 = 10^6; %критерий устойчивости
+e1 = 10^6; %�������� ������������
 flag = 0;
-time = [0; 84; 153];
-real_data(:,1) = xlsread("data.xlsx", 'H3:H5');
-real_data(:,2) = xlsread("data.xlsx", 'J3:J5');
-real_data(:,1) = real_data(:,1)./100000;
-real_data(:,2) = real_data(:,2)./1000;
 
-x1(1) = real_data(1, 1); %начальные условия численности фитопланктона
-x2(1) = real_data(1, 2); %начальные условия численности зоопланктона
-
-alpha1(1) = 0.5; %начальные условия питания
-alpha2 = 0.08;
-beta1 = 0.018;
-beta2 = 0.229;
+alpha2 = 0.12;
+beta1 = 0.13;
+beta2 = 0.05;
+T1 = 1;
+T2 = 1;
 
 mas = [];
-data = [];
+flag_find = 1;
+x = [4 20 0.04];
+% for X1 = 1:1:30
+% for X2 = 1:1:30
 
-for k = 2:20
-      MIN = 10^6;
-    xc = real_data(1, 1).*k; %целевое значение
-    e2 = .01 * xc; %критерий достижения цели
-    mas = [];
-for T1 = 0:.1:100
-for T2 = 0:.1:100
-for n=1:(length(M) - 1)
-      f1 = alpha1(n)*x1(n) - beta1*x1(n)*x2(n);
-       f2 = -alpha2*x2(n) + beta2*x1(n)*x2(n);
-
-        dfdt = - (xc / (T2 * x1(n) * x1(n))) * f1 + beta1 * f2;
-        fi = -( (x1(n) - xc)/(T2*x1(n)) ) + beta1*x2(n);
-        psi1 = alpha1(n) - fi;
-        U(n + 1) = -(psi1 / T1) + dfdt;
-        f3 = U(n);
- 
-       x1(n + 1) = x1(n) + h*f1;
-        x2(n + 1) = x2(n) + h*f2;
-        alpha1(n + 1) = alpha1(n) + h*f3;
-        if x1(n + 1) >= e1 || x1(n + 1) < 0
-           flag = 1;
-           break
-        end
-        if x2(n + 1) >= e1 || x2(n + 1) < 0
-           flag = 1;
-           break
-        end
-        if alpha1(n + 1) >= e1  || alpha1(n + 1) < 0
-           flag = 1;
-           break
-        end
-end
-%   период цветения воды с 1 июня (10 отчет) по 31 августа (100 отчет)
-    if flag == 0 && T1 ~= 0 && T2 ~= 0
-    for i=1:100
-       if abs(x1(i) - xc) <= e2 && abs(x1(i + 1) - xc) <= e2 && abs(x1(100) - xc) <= e2 && i < MIN
-            MIN = i;
-            mas(end + 1, :) = [k i T1 T2 alpha1(1) alpha2 beta1 beta2];
-            break;
-       end
-    end
-    end
-
+xc = alpha2/beta2;
+e2 = .1 * xc; %�������� ���������� ����
+    
+for a1 = 0.01:0.01:100
+    x = [4 20 a1];
+% for alpha2 = 0.1:0.1:1
+% for beta1 = 0.01:0.01:1
+% for beta2 = 0.01:0.01:1
+% for T1 = 0:.1:20
+% for T2 = 0:100
+flag_xc = 0;
     flag = 0;
+    x = solODExc(h, N, x, xc, alpha2, beta1, beta2, T1, T2, 2, false);
+    
+    if sum(find(x(:,1) < 0)) > 0 || isnan(x(end,1))
+       flag = 1;
+    end
+    if sum(find(x(:,2) < 0)) > 0 || isnan(x(end,2))
+       flag = 1;
+    end
+    if isnan(x(end,3))
+       flag = 1;
+    end
+    if flag == 0
+        for i=1:length(M)
+            if abs(x(i,1) - xc) <= e2 && abs(x(i + 1,1) - xc) <= e2 && abs(x(end,1) - xc) <= e2
+                mas(end + 1,:) = [x(1,1) x(1,2) T1 T2 M(i) x(1,3) alpha2 beta1 beta2];
+%                 flag_xc = 1;
+%                 dx2=[0 diff(x2)];
+%                 [x2_1,t1]=find(dx2<0);
+%                 [x2_2,t2]=find(dx2>0);
+%                 [x2_3,t3]=find(dx2==0);
+%                 S1 = sum(ismember(M(N/2+1:end), t1));
+%                 S2 = sum(ismember(M(N/2+1:end), t2));
+%                 S3 = sum(ismember(M(N/2+1:end), t3));
+%                 S1_1 = sum(ismember(M(1:N/2), t2));
+%                 S2_1 = sum(ismember(M(1:N/2), t1));
+%                 if S1 > 0.8*(N - (N/2+1))
+%                     dataLess0(end+1,:) = [x1(1) x2(1) T1 T2 i tx2 alpha2 beta1 beta2];
+%                 end
+%                 if S2 > 0.8*(N - (N/2+1))
+%                     dataMore0(end+1,:) = [x1(1) x2(1) T1 T2 i tx2 alpha2 beta1 beta2];
+%                 end
+%                 if S3 > 0.8*(N - (N/2+1))
+%                     dataEq0(end+1,:) = [x1(1) x2(1) T1 T2 i tx2 alpha2 beta1 beta2];
+%                 end
+%                 if S1_1 > 0.05*(N/2)
+%                     dataMore0X2(end+1,:) = [x1(1) x2(1) T1 T2 i tx2 alpha2 beta1 beta2];
+%                 end
+%                 if S2_1 > 0.05*(N/2)
+%                     dataLess0X2(end+1,:) = [x1(1) x2(1) T1 T2 i tx2 alpha2 beta1 beta2];
+%                 end
+                break;
+            end
+        end
+    end
 end
-end
-     MIN = 10^6;
-     MIN_mas = [];
-     %находим в полученном массиве mas минимальное время
-     for i = 1:size(mas,1)
-           if mas(i,2) < MIN
-              MIN = mas(i,2);
-              MIN_mas = mas(i,:);
-           end
-     end
-     if ~isempty(MIN_mas)
-         data(end+1,:) = MIN_mas;
-     end
+% end
+% end
 
-end
-%полученный на выходе массив data содержит значения коэффициентов для
-%каждого значения k
+%% ���������� �������
+
+i = 2312;
+row = num2cell(mas(i,:));
+x = [];
+[x(1,1), x(1,2), T1, T2, t, x(1,3), alpha2, beta1, beta2] = deal(row{:});
+x = solODExc(0.01, 500, [4 20 24.13], xc, alpha2, beta1, beta2, T1, T2, 2, true);
+
+%%
+plot(mas(:,6),mas(:,5),'o','LineWidth',3);
+xlabel("\alpha_{1}(0)");
+ylabel("t_{���������� ����}, ���");
+ax = gca;
+ax.FontSize = 30;
+
+%%
+clear;
+t = 0:50;
+a2 = 0.05;
+b2 = 0.3;
+d = 2;
+r = 2;
+x2 = (-a2/b2 - d)./(r*(exp((a2 + b2*d).*t) - 1));
+plot(t,x2, 'LineWidth',3);
+axis([0 inf -inf 0]);
+xlabel('t');
+ylabel('x_{2}(t)');
+ax = gca;
+ax.FontSize = 20;
+
+%%
+clear;
+t = 0:50;
+a2 = 0.05;
+b2 = 0.3;
+d = 2;
+r = 2;
+x2 = ((-a2/b2 + d)*exp(a2 + b2*d.*t))./(r*(exp(a2 + b2*d.*t) - exp(a2.*t + b2*d)));
+plot(t,x2, 'LineWidth',3);
+axis([0 inf 0 inf]);
+xlabel('t');
+ylabel('x_{2}(t)');
+ax = gca;
+ax.FontSize = 20;

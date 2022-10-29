@@ -66,8 +66,8 @@ function x = sol_NPZ_base(plotting, N, x, coeffs)
         fontsize = 20;
 
         fig = figure('Units','inches','Position',[1 1 width height],'PaperPositionMode','auto');
-        text(1,1,str,'Units','normalized','HorizontalAlignment', 'right', 'VerticalAlignment',...
-            'top','FontSize',15);
+%         text(1,1,str,'Units','normalized','HorizontalAlignment', 'right', 'VerticalAlignment',...
+%             'top','FontSize',15);
         box on;
         grid on;
         hold on;
@@ -76,11 +76,12 @@ function x = sol_NPZ_base(plotting, N, x, coeffs)
         plot(M, x(:,2), 'r', 'Linewidth',3);
         plot(M, x(:,3), 'b', 'Linewidth',3);
         plot(M, stpoints .* ones(length(M), 3), 'k--', 'Linewidth',2);
-        xlabel('Время, дни');
-        ylabel('Популяция, ед/л');
-        legend({'Питание (x_{1})', 'Фитопланктон (x_{2})', 'Зоопланктон (x_{3})', 'x_{1s}', 'x_{2s}', 'x_{3s}'}, 'Location','best');
+        xlabel('Time, days');
+        ylabel('Population, units/l');
+        legend({'Nutrition (x_{1})', 'Phytoplankton (x_{2})', 'Zooplankton (x_{3})', 'x_{1s}', 'x_{2s}', 'x_{3s}'}, 'Location','best');
         set(fig.Children, 'FontName','Times', 'FontSize',fontsize);
         set(gca,'LooseInset', max(get(gca,'TightInset'), 0.02))
+        print(fig,'E:\YandexDisk\Study\Наука\Мат. модели\Статьи и книги\Мои\Статья с NPZ и TPP\eng\1','-dpng','-r600')
     end
     function [output] = odenpz(~, x)
        f1 = a*x(2) + b*x(3) - c*x(1)*x(2);

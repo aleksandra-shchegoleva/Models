@@ -1,44 +1,53 @@
-N = 154; %Ð²Ñ€ÐµÐ¼Ñ
-h = 1; %ÑˆÐ°Ð³
-
-M = 0:h:N; %ÑÐµÑ‚ÐºÐ° Ð²Ñ€ÐµÐ¼ÐµÐ½Ð¸
-
-mas = [];
-x1 = zeros(1, length(M));
-x2 = zeros(1, length(M));
-
-e1 = 10^6; %ÐºÑ€Ð¸Ñ‚ÐµÑ€Ð¸Ð¹ ÑÑ‚Ð°Ð±Ð¸Ð»ÑŒÐ½Ð¾ÑÑ‚Ð¸
-flag = 0;
-time = [0; 85; N];
-% Ð—Ð°Ð³Ñ€ÑƒÐ·ÐºÐ° Ð´Ð°Ð½Ð½Ñ‹Ñ… Ð¸Ð· Excel (Ð±Ð¸Ð¾Ð¼Ð°ÑÑÐ°)
+% Çàãðóçêà äàííûõ èç Excel (áèîìàññà)
 % real_data(:,1) = xlsread("data.xlsx", 'H3:H5');
 % real_data(:,2) = xlsread("data.xlsx", 'J3:J5');
-% real_data(:,1) = real_data(:,1)./100000;
-% real_data(:,2) = real_data(:,2)./1000;
-% Ð—Ð°Ð³Ñ€ÑƒÐ·ÐºÐ° Ð´Ð°Ð½Ð½Ñ‹Ñ… Ð¸Ð· Excel (Ñ‡Ð¸ÑÐ»ÐµÐ½Ð½Ð¾ÑÑ‚ÑŒ)
-% real_data(:,1) = xlsread("data.xlsx", 'I3:I5');
-% real_data(:,2) = xlsread("data.xlsx", 'K3:K5');
 % real_data(:,1) = real_data(:,1).*1000;
-% real_data(:,2) = real_data(:,2);
+data = [];
 
-x1(1) = real_data(1, 1); %Ð½Ð°Ñ‡Ð°Ð»ÑŒÐ½Ñ‹Ðµ Ð´Ð°Ð½Ð½Ñ‹Ðµ Ñ„Ð¸Ñ‚Ð¾Ð¿Ð»Ð°Ð½ÐºÑ‚Ð¾Ð½Ð°
-x2(1) = real_data(1, 2); %Ð½Ð°Ñ‡Ð°Ð»ÑŒÐ½Ñ‹Ðµ Ð´Ð°Ð½Ð½Ñ‹Ðµ Ð·Ð¾Ð¾Ð¿Ð»Ð°Ð½ÐºÑ‚Ð¾Ð½Ð°
-xc = real_data(3, 1); %Ñ†ÐµÐ»ÐµÐ²Ð¾Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ
+for j = 3:3:44
+rangeDate = strcat('C', num2str(j), ':C', num2str(j+2));
+rangeX1 = strcat('D', num2str(j), ':D', num2str(j+2));
+rangeX2 = strcat('F', num2str(j), ':F', num2str(j+2));
+rangeStation = strcat('B', num2str(j), ':B', num2str(j+2));
 
+Tabledata = readtable("data_groups.xlsx",'ReadVariableNames',false, 'Range', rangeDate);
+rows = size(Tabledata, 1);
+date = datetime(Tabledata.Var1);
+diff_date = caldays(caldiff(date, 'days'));
+DATE = [];
+for i = 1:3:length(diff_date)
+    DATE = [DATE; 0; diff_date(i); diff_date(i) + diff_date(i+1)];
+end
+% Çàãðóçêà äàííûõ èç Excel (÷èñëåííîñòü)
+station = xlsread("data_groups.xlsx", rangeStation);
+real_data(:,1) = xlsread("data_groups.xlsx", rangeX1);
+real_data(:,2) = xlsread("data_groups.xlsx", rangeX2);
+real_data(:,1) = real_data(:,1)./100000;
+real_data(:,2) = real_data(:,2)./1000;
+
+x1(1) = real_data(1, 1); %íà÷àëüíûå äàííûå ôèòîïëàíêòîíà
+x2(1) = real_data(1, 2); %íà÷àëüíûå äàííûå çîîïëàíêòîíà
+
+mas = [];
 M1 = zeros(1, 3);
 M2 = zeros(1, 3);
 MIN = [10^6 10^6 10^6];
 
-for alpha1 = 0.01:0.01:0.5
+N = DATE(end); %âðåìÿ
+h = 1; %øàã
+M = 0:h:N; %ñåòêà âðåìåíè
+e1 = 10^6; %êðèòåðèé ñòàáèëüíîñòè
+flag = 0;
+
+for alpha1 = 0.01:0.01:1
 for alpha2 = 0.01:0.01:1
-for beta1 = 0.001:0.001:1
+for beta1 = 0.01:0.01:1
 for beta2 = 0.01:0.01:1
-    
 for n=1:(length(M) - 1)
-      f1 = alpha1*x1(n) - beta1*x1(n)*x2(n);
-       f2 = -alpha2*x2(n) + beta2*x1(n)*x2(n);
+        f1 = alpha1*x1(n) - beta1*x1(n)*x2(n);
+        f2 = -alpha2*x2(n) + beta2*x1(n)*x2(n);
  
-       x1(n + 1) = x1(n) + h*f1;
+        x1(n + 1) = x1(n) + h*f1;
         x2(n + 1) = x2(n) + h*f2;
 
         if x1(n + 1) >= e1 || x1(n + 1) < 0
@@ -51,13 +60,13 @@ for n=1:(length(M) - 1)
         end
 end
     if flag == 0
-        %Ð½Ð°Ñ…Ð¾Ð¶Ð´ÐµÐ½Ð¸Ðµ Ñ€Ð°Ð·Ð¼ÐµÑ€Ð° Ð¾ÑˆÐ¸Ð±ÐºÐ¸
-        for i=1:3
-         M1(1, i) = (real_data(i, 1) - x1(time(i, :) + 1))^2;
-         M2(1, i) = (real_data(i, 2) - x2(time(i, :) + 1))^2;
-        end
-        %ÑÑ€Ð°Ð²Ð½ÐµÐ½Ð¸Ðµ Ñ€Ð°ÑÑÑ‡Ð¸Ñ‚Ð°Ð½Ð½Ð¾Ð¹ Ð¾ÑˆÐ¸Ð±ÐºÐ¸ Ñ Ð¼Ð¸Ð½Ð¸Ð¼Ð°Ð»ÑŒÐ½Ð¾Ð¹
-        if sum(M1) + sum(M2) < sum(MIN)
+        %íàõîæäåíèå ðàçìåðà îøèáêè
+%         for i=1:3
+         M1 = (real_data(3, 1) - x1(DATE(3, :) + 1))^2;
+         M2 = (real_data(3, 2) - x2(DATE(3, :) + 1))^2;
+%         end
+        %ñðàâíåíèå ðàññ÷èòàííîé îøèáêè ñ ìèíèìàëüíîé
+        if M1 + M2 < MIN
             MIN = M1 + M2;
             mas(end + 1, :) = [alpha1 alpha2 beta1 beta2];
         end
@@ -68,4 +77,6 @@ end
 end
 end
 end
+end
+    data(end+1,:) = [station(1) mas(end,:)];
 end

@@ -17,12 +17,12 @@ coeff = [0.01 0.01 0.01 0.01];
 
 % нелинейный МНК (Квазиньютоновский метод)
 F = @(coeff) func(coeff,x_data(1,:),t); % расчет значений в точках
-FsumSquares = @(coeff) sum(sum((F(coeff) - x_data).^2)); % критерий МНК
+FsumSquares = @(coeff) sum(sum((F(coeff) - x_data).^2))/size(x_data,1); % критерий МНК
 opts = optimoptions('fminunc','Algorithm','quasi-newton');
 [quasiCoeff,ressquared,eflag,outputu] = fminunc(FsumSquares,coeff,opts);
 [a1, b1, a2, b2] = deal(quasiCoeff(1), quasiCoeff(2), quasiCoeff(3), quasiCoeff(4));
-
-clc;
+disp(strcat('Квазиньютоновский метод: a1=', string(quasiCoeff(1)),' b1=', string(quasiCoeff(2)),' a2=', string(quasiCoeff(3)), ' b2=', string(quasiCoeff(4))));
+% clc;
 end
 
 function y = func(coeff,x0,t)
