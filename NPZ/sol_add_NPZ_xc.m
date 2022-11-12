@@ -121,35 +121,53 @@ function [M,x] = sol_add_NPZ_xc(xc, T1, T2, h, plotting, N, typeSolution, x, coe
         height     = 7.5;
         fontsize = 20;
 
+%         fig = figure('Units','inches','Position',[1 1 width height],'PaperPositionMode','auto');
+%         box on;
+%         grid on;
+%         hold on;
+%         plot(M, u, 'k','Linewidth',3);
+%         axis([0 N -inf inf]);
+%         xlabel('Time, days');
+%         ylabel('Control');
+%         set(fig.Children, 'FontName','Times', 'FontSize',fontsize);
+%         set(gca,'LooseInset', max(get(gca,'TightInset'), 0.02))
+% %         print(fig,'E:\YandexDisk\Study\Наука\Мат. модели\Статьи и книги\Мои\Статья с NPZ и TPP\eng\2b','-dpng','-r600')
+%         
+%         fig = figure('Units','inches','Position',[1 1 width height],'PaperPositionMode','auto');
+% %         text(1,1,str,'Units','normalized','HorizontalAlignment', 'right', 'VerticalAlignment',...
+% %             'top','FontSize',15);
+%         box on;
+%         grid on;
+%         hold on;
+%         plot(M, x(:,1), 'g','Linewidth',3);
+%         axis([0 N -inf inf]);
+%         plot(M, x(:,2), 'r', 'Linewidth',3);
+%         plot(M, x(:,3), 'b', 'Linewidth',3);
+%         plot(M, stpoints .* ones(length(M), 3), 'k--', 'Linewidth',2);
+%         xlabel('Time, days');
+%         ylabel('Population, units/l');
+%         legend({'Nutrition (x_{1})', 'Phytoplankton (x_{2})', 'Zooplankton (x_{3})', 'x_{1s}', 'x_{2}*', 'x_{3s}'}, 'Location','northeast');
+%         set(fig.Children, 'FontName','Times', 'FontSize',fontsize);
+%         set(gca,'LooseInset', max(get(gca,'TightInset'), 0.02))
+% %         print(fig,'E:\YandexDisk\Study\Наука\Мат. модели\Статьи и книги\Мои\Статья с NPZ и TPP\eng\1b','-dpng','-r600')
+
         fig = figure('Units','inches','Position',[1 1 width height],'PaperPositionMode','auto');
-        box on;
-        grid on;
-        hold on;
-        plot(M, u, 'k','Linewidth',3);
-        axis([0 N -inf inf]);
-        xlabel('Time, days');
-        ylabel('Control');
+%         box on;
+%         grid on;
+%         hold on;
+        plot3(x(:,1), x(:,2), x(:,3), 'b','Linewidth',3);
+        posx = [x(floor(length(M)/2),1) x(floor(length(M)/2)+1,1)];
+        posy = [x(floor(length(M)/2),2) x(floor(length(M)/2)+1,2)];
+        annotation('arrow', posx, posy);
+%         axis([0 N -inf inf -inf inf]);
+%         plot(M, stpoints .* ones(length(M), 3), 'k--', 'Linewidth',2);
+        xlabel('Nutrition (x_{1})');
+        ylabel('Phytoplankton (x_{2})');
+        zlabel('Zooplankton (x_{3})');
+%         legend({'Nutrition (x_{1})', 'Phytoplankton (x_{2})', 'Zooplankton (x_{3})', 'x_{1s}', 'x_{2}*', 'x_{3s}'}, 'Location','northeast');
         set(fig.Children, 'FontName','Times', 'FontSize',fontsize);
         set(gca,'LooseInset', max(get(gca,'TightInset'), 0.02))
-        print(fig,'E:\YandexDisk\Study\Наука\Мат. модели\Статьи и книги\Мои\Статья с NPZ и TPP\eng\2b','-dpng','-r600')
-        
-        fig = figure('Units','inches','Position',[1 1 width height],'PaperPositionMode','auto');
-%         text(1,1,str,'Units','normalized','HorizontalAlignment', 'right', 'VerticalAlignment',...
-%             'top','FontSize',15);
-        box on;
-        grid on;
-        hold on;
-        plot(M, x(:,1), 'g','Linewidth',3);
-        axis([0 N -inf inf]);
-        plot(M, x(:,2), 'r', 'Linewidth',3);
-        plot(M, x(:,3), 'b', 'Linewidth',3);
-        plot(M, stpoints .* ones(length(M), 3), 'k--', 'Linewidth',2);
-        xlabel('Time, days');
-        ylabel('Population, units/l');
-        legend({'Nutrition (x_{1})', 'Phytoplankton (x_{2})', 'Zooplankton (x_{3})', 'x_{1s}', 'x_{2}*', 'x_{3s}'}, 'Location','northeast');
-        set(fig.Children, 'FontName','Times', 'FontSize',fontsize);
-        set(gca,'LooseInset', max(get(gca,'TightInset'), 0.02))
-        print(fig,'E:\YandexDisk\Study\Наука\Мат. модели\Статьи и книги\Мои\Статья с NPZ и TPP\eng\1b','-dpng','-r600')
+%         print(fig,'E:\YandexDisk\Study\Наука\Мат. модели\Статьи и книги\Мои\Статья с NPZ и TPP\eng\1b','-dpng','-r600')
     end
     
 end
