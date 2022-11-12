@@ -1,6 +1,3 @@
-!plot
-!quasi-newton
-!NPZ
-!ModelApp
-!methods_approximation_monitoring_data
 /*
+*/.idea/
+*/venv/
