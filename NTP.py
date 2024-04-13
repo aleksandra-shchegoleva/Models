@@ -2,10 +2,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sympy import exp, symbols, solve, sqrt
+import random
+
+random.seed(20)
+np.random.seed(20)
 
 class NTP_model():
     def __init__(self, P1, P2, Z, r1, r2, a1, a2, K1, K2, w1, w2, y1, y2, d1, d2, b1, m, m1, N, h, x2c, T1=1, T2=1, T=1,
-                 rho=None, d=None, c=None):
+                 rho=None, d=None, c=None, sigma=None, c_xi=None):
         self.x = np.array([[P1, P2, Z]])
         self.r1, self.r2 = r1, r2
         self.a1, self.a2 = a1, a2
@@ -22,6 +26,8 @@ class NTP_model():
         self.T2 = T2
         self.rho, self.d = rho, d
         self.c = c
+        self.sigma = sigma
+        self.c_xi = c_xi
         self.set_text()
 
     def set_text(self):
@@ -74,8 +80,8 @@ class NTP_model():
         sns.set_style('whitegrid')
         plt.xlim(0, self.N)
         plt.legend(loc="upper right")
-        plt.xlabel('Время, дни')
-        plt.ylabel('Популяция, ед/л')
+        plt.xlabel('Time, days')
+        plt.ylabel('Population, units/l')
         # plt.annotate(
         #         self.TEXT,
         #         xy=(1, 0),
@@ -91,30 +97,66 @@ class NTP_model():
         sns.set_style('whitegrid')
         plt.xlim(0, self.N)
         plt.legend(loc="upper right")
-        plt.xlabel('Время, дни')
-        plt.ylabel('Управление')
+        plt.xlabel('Time, days')
+        plt.ylabel('Control')
 
         plt.show()
 
-    def calc(self, plot):
+    def calc(self, plot, get_value=False):
         x1, x2, x3 = [self.x[0, 0]].copy(), [self.x[0, 1]].copy(), [self.x[0, 2]].copy()
         u = [0]
 
         for i in range(len(self.M)-1):
             f1 = self.r1*x1[i]*(1 - (x1[i] + self.a1*x2[i])/self.K1) - (self.w1*x1[i]*x3[i])/(self.d1 + x1[i])
-            f2 = self.r2*x2[i]*(1 - (x2[i] + self.a2*x1[i])/self.K2) - (self.w2*x2[i]*x3[i])/(self.d2 + x2[i] + self.b1*x1[i]) + u[i]
-            f3 = (self.w1*x1[i]*x3[i])/(self.d1 + x1[i]) - (self.w2*x2[i]*x3[i])/(self.d2 + x2[i] + self.b1*x1[i]) - self.c*x3[i]
+            f2 = self.r2*x2[i]*(1 - (x2[i] + self.a2*x1[i])/self.K2) - (self.w2*x2[i]*x3[i])/(self.d2 + self.b1*x2[i]**2) + u[i]
+            f3 = (self.y1*x1[i]*x3[i])/(self.d1 + x1[i]) - (self.y2*x2[i]*x3[i])/(self.d2 + self.b1*x2[i]**2) - self.m * x3[i] - self.m1 * x3[i] ** 2
 
             psi = x2[i] - self.x2c
-            x1.append(x1[i] + self.h*f1)
+            x1.append(x1[i] + self.h * f1)
             x2.append(x2[i] + self.h * f2)
             x3.append(x3[i] + self.h * f3)
-            u.append(-psi / self.T - self.r2*x2[i]*(1 - (x2[i] + self.a2*x1[i])/self.K2) + (self.w2*x2[i]*x3[i])/(self.d2 + x2[i] + self.b1*x1[i]))
+            u.append(-psi / self.T - self.r2*x2[i]*(1 - (x2[i] + self.a2*x1[i])/self.K2) + (self.w2*x2[i]*x3[i])/(self.d2 + self.b1*x2[i]**2))
 
         if plot:
             self.plot_solution([x1, x2, x3], u, {r'$P_2^*$': self.x2c})
+        if get_value:
+            return [x1, x2, x3]
 
-    def calc_multi(self, plot):
+    def cacl_NAS_add(self, plot, get_value=False):
+        x1, x2, x3 = [self.x[0, 0]].copy(), [self.x[0, 1]].copy(), [self.x[0, 2]].copy()
+        u = [0]
+        psi = []
+        xi = [random.normalvariate(0, self.sigma) for _ in range(len(self.M) + 1)]
+
+        # first step
+        f1 = self.r1 * x1[0] * (1 - (x1[0] + self.a1 * x2[0]) / self.K1) - (self.w1 * x1[0] * x3[0]) / (self.d1 + x1[0])
+        f2 = self.r2 * x2[0] * (1 - (x2[0] + self.a2 * x1[0]) / self.K2) - (self.w2 * x2[0] * x3[0]) / (
+                    self.d2 + self.b1 * x2[0] ** 2)
+        f3 = (self.y1 * x1[0] * x3[0]) / (self.d1 + x1[0]) - (self.y2 * x2[0] * x3[0]) / (
+                    self.d2 + self.b1 * x2[0] ** 2) - self.m * x3[0] - self.m1 * x3[0] ** 2
+        psi.append(x2[0] - self.x2c)
+        x1.append(x1[0] + self.h * f1)
+        x2.append(x2[0] + self.h * f2 + self.h * u[0] + xi[1] + self.c_xi * xi[0])
+        x3.append(x3[0] + self.h * f3)
+
+        for i in range(1, len(self.M)-1):
+            f1 = self.r1*x1[i]*(1 - (x1[i] + self.a1*x2[i])/self.K1) - (self.w1*x1[i]*x3[i])/(self.d1 + x1[i])
+            f2 = self.r2*x2[i]*(1 - (x2[i] + self.a2*x1[i])/self.K2) - (self.w2*x2[i]*x3[i])/(self.d2 + self.b1*x2[i]**2)
+            f3 = (self.y1*x1[i]*x3[i])/(self.d1 + x1[i]) - (self.y2*x2[i]*x3[i])/(self.d2 + self.b1*x2[i]**2) - self.m * x3[i] - self.m1 * x3[i] ** 2
+
+            psi.append(x2[i] - self.x2c)
+            x1.append(x1[i] + self.h * f1)
+            u.append((-x2[i] - self.c_xi * (psi[i] + self.T1 * psi[i - 1]) + self.x2c - self.T1 * psi[i]) / self.h
+                     - f2)
+            x2.append(x2[i] + self.h * f2 + self.h * u[i] + xi[i + 1] + self.c_xi * xi[i])
+            x3.append(x3[i] + self.h * f3)
+
+        if plot:
+            self.plot_solution([x1, x2, x3], u, {r'$P_2^*$': self.x2c})
+        if get_value:
+            return [x1, x2, x3]
+
+    def calc_multi(self, plot, get_value=False):
         x1, x2, x3 = [self.x[0, 0]].copy(), [self.x[0, 1]].copy(), [self.x[0, 2]].copy()
         u = [0]
 
@@ -131,8 +173,10 @@ class NTP_model():
 
         if plot:
             self.plot_solution([x1, x2, x3], u, {r'$P_2^*$': self.x2c})
+        if get_value:
+            return [x1, x2, x3]
 
-    def calc_multi_big_phase(self, plot):
+    def calc_multi_big_phase(self, plot, get_value=False):
         x1, x2, x3 = [self.x[0, 0]].copy(), [self.x[0, 1]].copy(), [self.x[0, 2]].copy()
         u = [0]
 
@@ -170,6 +214,8 @@ class NTP_model():
 
         if plot:
             self.plot_solution([x1, x2, x3], u)
+        if get_value:
+            return [x1, x2, x3]
 
     def calc_big_phase(self, plot):
         x1, x2, x3 = [self.x[0, 0]].copy(), [self.x[0, 1]].copy(), [self.x[0, 2]].copy()
